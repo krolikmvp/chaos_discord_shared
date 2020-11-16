@@ -19,3 +19,7 @@ Dev configuration:
 --riot_key - your RiotAPI 
 
 -use ==start command when bot is running to create new tables in database
+
+
+if you have any issues with canvas lib try:
+npm install --global --production windows-build-tools
