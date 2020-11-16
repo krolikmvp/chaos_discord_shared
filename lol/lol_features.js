@@ -1,4 +1,5 @@
 const getRotationRequest = require("./getRotationRequest.js");
+const getCurrentPatch = require("./getCurrentPatch.js");
 const Champions = require("./champions.json");
 const mergeImages = require('merge-images');
 // const Canvas = require('canvas');
@@ -24,8 +25,12 @@ function deleteFolderRecursive(path) {
 }
 
 module.exports.rollChamps = async function(args2){
+  // Rolls specified number of LOL champions for each team
+  // example: champions 12 2 (rolls 12 champions for each team, 2 champions from free rotation)
 
-  console.debug("rotation request")
+  //gets current LOL patch and updates champions list if current patch is not the latest
+  getCurrentPatch.run()
+
   let rotation = await getRotationRequest.run().then(r => {
 
     return r.freeChampionIds;
