@@ -18,7 +18,7 @@ Dev configuration:
 
 --riot_key - your RiotAPI 
 
--use ==start command when bot is running to create new tables in database
+-use ==start command when bot is running to create new tables in database (sqlite database should be automatically created on bot first run)
 
 
 if you have any issues with canvas lib try:
