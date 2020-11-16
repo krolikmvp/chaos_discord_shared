@@ -3,8 +3,8 @@ const Champions = require("./champions.json");
 const mergeImages = require('merge-images');
 // const Canvas = require('canvas');
 const fs = require("fs");
-const items = require('./items.json')
-const itemsjs = require('./items.js')
+// const items = require('./items.json')
+// const itemsjs = require('./items.js')
 const Jimp = require("jimp");
 
 BUILD_PATH = './lol/tmp/build.png'
@@ -22,70 +22,6 @@ function deleteFolderRecursive(path) {
     });
   }
 }
-function decorateChampion(item_){
-  var base = './lol/champion/'
-  var png = '.png'
-  return base + item_ + png
-}
-function rollBoots(){
-  var pos = Math.floor(Math.random() * itemsjs.boots.length)
-
-  return itemsjs.boots[pos]
-
-}
-function rollitem(items_){
-  var pos = Math.floor(Math.random() * items_.length)
-  return items_[pos]
-
-}
-function decorateItem(item_){
-  var base = './lol/item/'
-  var png = '.png'
-  return base + item_ + png
-}
-function getItems(){
-  function combineItems(){
-
-    var pngs = []
-    var items = getItems()
-    var boots = rollBoots()
-    pngs.push(decorateItem(boots))
-    for( var i = 0 ; i < 7 ; i+=1)
-    {
-      while(true)
-      {
-        var item = rollitem(items)
-        var decorated = decorateItem(item)
-        if(!(pngs.indexOf(decorated) > -1))
-        {
-          pngs.push( decorated)
-          break;
-        }
-      }
-    }
-
-    return pngs
-  }
-  var items_rolled = []
-    for (item in items.data)
-    {
-        if (!items.data[item].into && !items.data[item].requiredChampion && !items.data[item].consumed && items.data[item].tags)
-        {
-            if (items.data[item].tags.indexOf('Trinket') == -1 &&
-              items.data[item].tags.indexOf('Boots') == -1 &&
-              items.data[item].maps['12'] == true &&
-              items.data[item].name.indexOf('Quick') == -1 &&
-              items.data[item].name.indexOf(`Doran's`) == -1 &&
-              items.data[item].name.indexOf(`TESTING`) == -1 &&
-              items.data[item].tags.indexOf('Consumable') == -1){
-                if(itemsjs.excluded.indexOf(items.data[item].name) == -1)
-                  items_rolled.push(items.data[item].id)
-                }
-        }
-    }
-  return items_rolled
-}
-
 
 module.exports.rollChamps = async function(args2){
 
@@ -190,62 +126,125 @@ module.exports.rollChamps = async function(args2){
 
 }
 
-module.exports.combineRotation = async function (message){
+// module.exports.combineRotation = async function (message){
 
-  let rotation = await getRotationRequest.run().then(r => {
+//   let rotation = await getRotationRequest.run().then(r => {
 
-      return r.freeChampionIds;
+//       return r.freeChampionIds;
 
-  });
+//   });
 
-  var pngs = []
-  var list_ = Champions
-  for (c in list_['data'])
-  {
-    if (rotation.indexOf(list_['data'][c].id) > -1)
-      pngs.push(decorateChampion(list_['data'][c].key));
+//   var pngs = []
+//   var list_ = Champions
+//   for (c in list_['data'])
+//   {
+//     if (rotation.indexOf(list_['data'][c].id) > -1)
+//       pngs.push(decorateChampion(list_['data'][c].key));
 
-  }
+//   }
 
-  await mergeImages([
-      { src: pngs[0], x: 0, y: 0 },
-      { src: pngs[1], x: 120, y: 0 },
-      { src: pngs[2], x: 0, y: 120 },
-      { src: pngs[3], x: 120, y: 120 },
-      { src: pngs[4], x: 0, y: 240 },
-      { src: pngs[5], x: 120, y: 240 },
-      { src: pngs[6], x: 0, y: 360 },
-      { src: pngs[7], x: 120, y: 360 },
-      { src: pngs[8], x: 0, y: 480 },
-      { src: pngs[9], x: 120, y: 480 },
-      { src: pngs[10], x: 0, y: 600 },
-      { src: pngs[11], x: 120, y: 600 },
-      { src: pngs[12], x: 0, y: 720 },
-      { src: pngs[13], x: 120, y: 720},
+//   await mergeImages([
+//       { src: pngs[0], x: 0, y: 0 },
+//       { src: pngs[1], x: 120, y: 0 },
+//       { src: pngs[2], x: 0, y: 120 },
+//       { src: pngs[3], x: 120, y: 120 },
+//       { src: pngs[4], x: 0, y: 240 },
+//       { src: pngs[5], x: 120, y: 240 },
+//       { src: pngs[6], x: 0, y: 360 },
+//       { src: pngs[7], x: 120, y: 360 },
+//       { src: pngs[8], x: 0, y: 480 },
+//       { src: pngs[9], x: 120, y: 480 },
+//       { src: pngs[10], x: 0, y: 600 },
+//       { src: pngs[11], x: 120, y: 600 },
+//       { src: pngs[12], x: 0, y: 720 },
+//       { src: pngs[13], x: 120, y: 720},
 
-    ], {
-      Canvas : Canvas,
-      width: 240,
-      height: 840
-    }).then(b64 =>{
+//     ], {
+//       Canvas : Canvas,
+//       width: 240,
+//       height: 840
+//     }).then(b64 =>{
 
-      var data = b64.replace(/^data:image\/\w+;base64,/, "");
-      var buf = new Buffer(data, 'base64');
-      var ret =  fs.writeFile('tmp.png', buf, function(err) { console.log(err)});
-      setTimeout(function() {
-        message.channel.send( {
-          files: [
-            "./tmp.png"
-          ]
-        })
-      },1000)
+//       var data = b64.replace(/^data:image\/\w+;base64,/, "");
+//       var buf = new Buffer(data, 'base64');
+//       var ret =  fs.writeFile('tmp.png', buf, function(err) { console.log(err)});
+//       setTimeout(function() {
+//         message.channel.send( {
+//           files: [
+//             "./tmp.png"
+//           ]
+//         })
+//       },1000)
 
-    }).catch(function(error) {
-    console.log(error);
-  });
+//     }).catch(function(error) {
+//     console.log(error);
+//   });
 
 
-}
+// }
+// function decorateChampion(item_){
+//   var base = './lol/champion/'
+//   var png = '.png'
+//   return base + item_ + png
+// }
+// function rollBoots(){
+//   var pos = Math.floor(Math.random() * itemsjs.boots.length)
+
+//   return itemsjs.boots[pos]
+
+// }
+// function rollitem(items_){
+//   var pos = Math.floor(Math.random() * items_.length)
+//   return items_[pos]
+
+// }
+// function decorateItem(item_){
+//   var base = './lol/item/'
+//   var png = '.png'
+//   return base + item_ + png
+// }
+// function getItems(){
+//   function combineItems(){
+
+//     var pngs = []
+//     var items = getItems()
+//     var boots = rollBoots()
+//     pngs.push(decorateItem(boots))
+//     for( var i = 0 ; i < 7 ; i+=1)
+//     {
+//       while(true)
+//       {
+//         var item = rollitem(items)
+//         var decorated = decorateItem(item)
+//         if(!(pngs.indexOf(decorated) > -1))
+//         {
+//           pngs.push( decorated)
+//           break;
+//         }
+//       }
+//     }
+
+//     return pngs
+//   }
+//   var items_rolled = []
+//     for (item in items.data)
+//     {
+//         if (!items.data[item].into && !items.data[item].requiredChampion && !items.data[item].consumed && items.data[item].tags)
+//         {
+//             if (items.data[item].tags.indexOf('Trinket') == -1 &&
+//               items.data[item].tags.indexOf('Boots') == -1 &&
+//               items.data[item].maps['12'] == true &&
+//               items.data[item].name.indexOf('Quick') == -1 &&
+//               items.data[item].name.indexOf(`Doran's`) == -1 &&
+//               items.data[item].name.indexOf(`TESTING`) == -1 &&
+//               items.data[item].tags.indexOf('Consumable') == -1){
+//                 if(itemsjs.excluded.indexOf(items.data[item].name) == -1)
+//                   items_rolled.push(items.data[item].id)
+//                 }
+//         }
+//     }
+//   return items_rolled
+// }
 
 // function toMergeBuilds(builds,paths){
 //   var to_merge_builds = []
