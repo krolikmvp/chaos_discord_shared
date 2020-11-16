@@ -184,6 +184,7 @@ function listenCommands(message,sql,args,args2,command)
       return;
     }
     var teams = [team1, team2]
+    //pairs of people who don't want to play eachother, they will be split between 2 teams
     var marudy = [["deasum", "etf"]]
 
       for (i=0;i<marudy.length;i++)
