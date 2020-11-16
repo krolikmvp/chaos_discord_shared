@@ -1,5 +1,6 @@
 const request = require('snekfetch');
 const current_patch = require("./current_patch.json");
+const getCurrentChampionList = require("./getCurrentChampionList.js");
 const superagent = require("superagent");
 const fs = require('fs');
 const path = require('path');
@@ -19,6 +20,9 @@ module.exports.run = async () =>
         console.log(JSON.stringify(current_patch));
         console.log('writing to ' + "./lol/current_patch.json");
         });
+
+        console.log("Getting current champions list")
+        getCurrentChampionList.run()
     }
     else
     {
