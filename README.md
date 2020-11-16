@@ -1,1 +1,1 @@
-# chaos_discord_shared
+# chaos_discord_bot
