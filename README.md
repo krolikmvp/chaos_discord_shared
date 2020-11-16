@@ -10,8 +10,6 @@ Dev configuration:
 
 -install matplotlib and and numpy using pip (probably also requirements)
 
--change "test-database.sqlite" name to "chaos.sqlite" to use test database or use ==start command when bot is running to create new database
-
 -fill the config.json file:
 
 --token - discord bot token
@@ -19,3 +17,5 @@ Dev configuration:
 --prefix - your command prefix
 
 --riot_key - your RiotAPI 
+
+-use ==start command when bot is running to create new tables in database
